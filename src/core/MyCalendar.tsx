@@ -2,21 +2,20 @@ import type * as React from 'react';
 import type {Callback} from '../util/Utils';
 
 import '../css/calendar.css';
-import {type CalendarId, dateToCId} from '../data/CalendarId';
-import {idToDate} from '../data/DateId';
+import {type DateId, idToDate, dateToId} from '../data/DateId';
 
 //const a = <ReactCalendar minDetail="month" onClickDay={props.onClickDay} tileClassName={props.tileClassName} next2Label={null} prev2Label={null}/>;
 
 interface MyCalendarProps {
-  id: CalendarId;
-  onClickDay: Callback<CalendarId>;
-  hasPageOrEvent: (day: CalendarId) => boolean;
+  id: DateId;
+  onClickDay: Callback<DateId>;
+  hasPageOrEvent: (day: DateId) => boolean;
 }
 
 export default function MyCalendar(props: MyCalendarProps): React.ReactElement {
   const date = idToDate(props.id);
-  const prev = dateToCId(prevMonth(date));
-  const next = dateToCId(nextMonth(date));
+  const prev = dateToId(prevMonth(date));
+  const next = dateToId(nextMonth(date));
   return <div className="mycalendar">
     <button className="mycalendarb nav" onClick={() => props.onClickDay(prev)}>&lt;</button>
     <div className="mycalendar-month"><span>{monthDisplay(date)}</span></div>
@@ -59,7 +58,7 @@ function* weekdays() {
   return;
 }
 
-function* days(selected: Date, onClick: Callback<CalendarId>, hasPageOrEvent: (id: CalendarId) => boolean) {
+function* days(selected: Date, onClick: Callback<DateId>, hasPageOrEvent: (id: DateId) => boolean) {
   const date = new Date(selected);
 
   const month = date.getMonth();
@@ -76,16 +75,16 @@ function* days(selected: Date, onClick: Callback<CalendarId>, hasPageOrEvent: (i
   return;
 }
 
-function dayDisplay(sel: Date, day: Date, onClick: Callback<CalendarId>, hasPageOrEvent: (id: CalendarId) => boolean) {
+function dayDisplay(sel: Date, day: Date, onClick: Callback<DateId>, hasPageOrEvent: (id: DateId) => boolean) {
   const wd = day.getDay();
   const md = day.getDate();
-  const id = dateToCId(day);
+  const id = dateToId(day);
 
   const weekend = wd === 0 || wd === 6 ? ' weekend' : '';
   const extra = sel.getMonth() !== day.getMonth() ? ' extra' : '';
   const busy = hasPageOrEvent(id) ? ' busy' : '';
-  const selected = id === dateToCId(sel) ? ' selected' : '';
-  const today = id === dateToCId(new Date()) ? ' today' : '';
+  const selected = id === dateToId(sel) ? ' selected' : '';
+  const today = id === dateToId(new Date()) ? ' today' : '';
   const className = `mycalendarb${weekend}${extra}${busy}${today}${selected}`;
 
   return <button key={`${day.getMonth()} ${md}`} className={className} onClick={() => onClick(id)}>{md}</button>;

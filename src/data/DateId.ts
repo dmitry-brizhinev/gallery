@@ -1,24 +1,16 @@
 import {assert, type Day, pad2} from "../util/Utils";
 import {castToTypedef, type StrongTypedef} from "../util/StrongTypedef";
 
-interface DateIdMap {
-  'C': DateId<'C'>;
-  'E': DateId<'E'>;
-  'J': DateId<'J'>;
-}
-
-type RawDateId<T extends keyof DateIdMap> = `${T}${string}`;
+type RawDateId = `C${string}`;
 declare const dateid: unique symbol;
-export type DateId<T extends keyof DateIdMap> = StrongTypedef<RawDateId<T>, typeof dateid>;
-type AnyDateId = DateIdMap[keyof DateIdMap];
+export type DateId = StrongTypedef<RawDateId, typeof dateid>;
 
-const DateIdRegex = /^[CEJ](20\d\d)-([01]\d)-([0123]\d)$/;
+const DateIdRegex = /^C(20\d\d)-([01]\d)-([0123]\d)$/;
 
-export function checkDateId<T extends keyof DateIdMap>(id: string, cej: T): DateIdMap[T] | null {
+export function checkDateId(id: string): DateId | null {
   if (!DateIdRegex.test(id)) return null;
-  if (!id.startsWith(cej)) return null;
 
-  const did = castToTypedef<typeof dateid, RawDateId<T>>(`${cej}${id.slice(1)}`);
+  const did = castToTypedef<typeof dateid, RawDateId>(`C${id.slice(1)}`);
 
   const {month, day} = idToDay(did);
   if (month < 1 || month > 12 || day < 1 || day > 31) return null;
@@ -26,29 +18,29 @@ export function checkDateId<T extends keyof DateIdMap>(id: string, cej: T): Date
   return did;
 }
 
-export function dateToId<T extends keyof DateIdMap>(date: Date, cej: T): DateIdMap[T] {
+export function dateToId(date: Date): DateId {
   const year = date.getFullYear();
   const month = pad2(date.getMonth() + 1);
   const day = pad2(date.getDate());
-  const id = checkDateId(`${cej}${year}-${month}-${day}`, cej);
+  const id = checkDateId(`C${year}-${month}-${day}`);
   assert(id, `Failed constructing DateId with date ${date}`);
   return id;
 }
 
-export function incrementId<T extends keyof DateIdMap>(id: DateId<T>, incrementDays: number): DateIdMap[T] {
+export function incrementId(id: DateId, incrementDays: number): DateId {
   const date = idToDate(id);
   date.setDate(date.getDate() + incrementDays);
-  return dateToId<T>(date, id.charAt(0) as T);
+  return dateToId(date);
 }
 
-export function idToDay(id: DateId<any>): Day {
+export function idToDay(id: DateId): Day {
   const year = Number.parseInt(id.substring(1, 5));
   const month = Number.parseInt(id.substring(6, 8));
   const day = Number.parseInt(id.substring(9, 11));
   return {year, month, day};
 }
 
-export function idToDate(id: DateId<any>): Date {
+export function idToDate(id: DateId): Date {
   const {year, month, day} = idToDay(id);
   return new Date(year, month - 1, day);
 }
@@ -56,7 +48,7 @@ export function idToDate(id: DateId<any>): Date {
 const weekdayFormatter = new Intl.DateTimeFormat('en-US', {weekday: 'long'});
 const monthFormatter = new Intl.DateTimeFormat('en-US', {month: 'short'});
 
-export function idToNiceString(id: AnyDateId): string {
+export function idToNiceString(id: DateId): string {
   const idDate = idToDate(id);
   const toDate = new Date(); toDate.setHours(0, 0, 0, 0);
 

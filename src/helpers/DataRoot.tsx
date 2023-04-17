@@ -2,14 +2,14 @@ import * as React from 'react';
 import type {DataDiff, UserData, DataId, UserDataKey, UserDataLeaf, CalendarPageData, PageData} from '../data/Data';
 import DataSaver from './DataSaver';
 import type Event from '../data/Event';
-import type {CalendarId} from '../data/CalendarId';
+import type {DateId} from '../data/DateId';
 import type {PageId} from '../data/PageId';
 import type {Callback} from '../util/Utils';
 
 class DataRoot {
   onPageUpdate(_id: PageId, _data: PageData | null): void {}
-  onCalendarPageUpdate(_id: CalendarId, _data: CalendarPageData | null): void {}
-  onCalendarEventUpdate(_id: CalendarId, _magicKey: number, _event: Event | null): void {}
+  onCalendarPageUpdate(_id: DateId, _data: CalendarPageData | null): void {}
+  onCalendarEventUpdate(_id: DateId, _magicKey: number, _event: Event | null): void {}
 }
 
 export class DataRootImpl extends DataRoot {
@@ -35,12 +35,12 @@ export class DataRootImpl extends DataRoot {
     this.onUpdate<typeof key[0]>(key, data);
   }
 
-  override onCalendarPageUpdate(id: CalendarId, data: CalendarPageData | null) {
+  override onCalendarPageUpdate(id: DateId, data: CalendarPageData | null) {
     const key = ['calendarPages', id] as const;
     this.onUpdate<typeof key[0]>(key, data);
   }
 
-  override onCalendarEventUpdate(id: CalendarId, magicKey: number, event: Event | null) {
+  override onCalendarEventUpdate(id: DateId, magicKey: number, event: Event | null) {
     const key = ['calendarEvents', id, magicKey] as const;
     this.onUpdate<typeof key[0]>(key, event);
   }

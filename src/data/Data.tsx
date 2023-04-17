@@ -1,7 +1,7 @@
 import * as Immutable from 'immutable';
 
 import {Map as IMap} from 'immutable';
-import type {CalendarId} from './CalendarId';
+import type {DateId} from './DateId';
 
 import type Event from './Event';
 import type {PageId} from './PageId';
@@ -26,8 +26,8 @@ type Leaf<T extends DataType> = unknown extends T['leaf'] ? T['data'] : T['leaf'
 type KKey<T extends DataType> = T['key'] extends unknown[] ? T['key'] : [];
 
 type PageTypes = {id: PageId, data: readonly [string, string];};
-type CalendarPageTypes = {id: CalendarId, data: string;};
-type CalendarEventTypes = {id: CalendarId, data: IMap<number, Event>, leaf: Event, key: [number];};
+type CalendarPageTypes = {id: DateId, data: string;};
+type CalendarEventTypes = {id: DateId, data: IMap<number, Event>, leaf: Event, key: [number];};
 
 // const headings = ['pages', 'calendarPages', 'calendarEvents'] as const;
 export type DataTypes = {pages: PageTypes, calendarPages: CalendarPageTypes, calendarEvents: CalendarEventTypes;};
@@ -44,8 +44,8 @@ const makeDataDiffInner: Immutable.Record.Factory<UserDataDiff> = Immutable.Reco
 export type DataDiff = Immutable.RecordOf<UserDataDiff>;
 
 export interface PageUpdate {id: PageId, data: PageData | null;}
-export interface CalendarUpdate {id: CalendarId, data: CalendarPageData | null;}
-export interface EventUpdate {id: CalendarId, magicKey: number, event: Event | null;}
+export interface CalendarUpdate {id: DateId, data: CalendarPageData | null;}
+export interface EventUpdate {id: DateId, magicKey: number, event: Event | null;}
 
 /*function MakeIMap<T extends DataType>(): DMap<T> {
   return IMap();

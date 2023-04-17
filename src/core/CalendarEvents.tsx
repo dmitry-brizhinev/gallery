@@ -3,11 +3,11 @@ import {type Callback, type Func, pad2} from '../util/Utils';
 import ErrorBoundary from '../util/ErrorBoundary';
 import {DataRootContext} from '../helpers/DataRoot';
 import {type ValidComment, default as Event} from '../data/Event';
-import {type CalendarId, incrementCId} from '../data/CalendarId';
+import {type DateId, incrementId} from '../data/DateId';
 import Textarea from '../util/Textarea';
 
 interface EventInputProps {
-  dayId: CalendarId;
+  dayId: DateId;
   event: Event;
 }
 
@@ -54,7 +54,7 @@ export default class EventInput extends React.PureComponent<EventInputProps, Eve
       const oldEvent = this.props.event;
       if (oldEvent.recurDays) {
         const newEvent = oldEvent.withUpdate({regenKey: true});
-        const newId = incrementCId(this.props.dayId, oldEvent.recurDays);
+        const newId = incrementId(this.props.dayId, oldEvent.recurDays);
         this.context.onCalendarEventUpdate(newId, newEvent.magicKey, newEvent);
       }
     }

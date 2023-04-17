@@ -8,7 +8,7 @@ import EventInput from './CalendarEvents';
 import {Map as IMap} from 'immutable';
 import {DataRootContext} from '../helpers/DataRoot';
 import Event from '../data/Event';
-import {type CalendarId, dateToCId, incrementCId} from '../data/CalendarId';
+import {type DateId, dateToId, incrementId} from '../data/DateId';
 import type {Func} from '../util/Utils';
 import Textarea from '../util/Textarea';
 import MyCalendar from './MyCalendar';
@@ -22,33 +22,33 @@ interface CalendarProps {
 }
 
 interface CalendarState {
-  id: CalendarId;
+  id: DateId;
 }
 
 export default class Calendar extends React.Component<CalendarProps, CalendarState> {
   constructor(props: CalendarProps) {
     super(props);
 
-    this.state = {id: dateToCId(new Date())};
+    this.state = {id: dateToId(new Date())};
 
     this.changeDay = this.changeDay.bind(this);
     this.onClickPrevDay = this.onClickPrevDay.bind(this);
     this.onClickNextDay = this.onClickNextDay.bind(this);
   }
 
-  changeDay(id: CalendarId) {
+  changeDay(id: DateId) {
     this.setState({id});
   }
 
   onClickPrevDay() {
-    this.changeDay(incrementCId(this.state.id, -1));
+    this.changeDay(incrementId(this.state.id, -1));
   }
 
   onClickNextDay() {
-    this.changeDay(incrementCId(this.state.id, 1));
+    this.changeDay(incrementId(this.state.id, 1));
   }
 
-  hasPageOrEvent(id: CalendarId): boolean {
+  hasPageOrEvent(id: DateId): boolean {
     const hasPage = !!this.props.pages.get(id);
     const events = this.props.events.get(id);
     return hasPage || (!!events && events.size > 0 && events.some(event => !event.isFinished()));
@@ -67,7 +67,7 @@ export default class Calendar extends React.Component<CalendarProps, CalendarSta
 }
 
 interface CalendarPageProps {
-  id: CalendarId;
+  id: DateId;
   data: CalendarPageData;
 }
 
@@ -82,7 +82,7 @@ function CalendarPage(props: CalendarPageProps): React.ReactElement {
 }
 
 interface CalendarEventProps {
-  id: CalendarId;
+  id: DateId;
   data: CalendarEventData;
   onClickPrevDay: Func;
   onClickNextDay: Func;
