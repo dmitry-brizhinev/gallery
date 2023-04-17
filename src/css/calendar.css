@@ -1,0 +1,70 @@
+div.mycalendar {
+    display:grid;
+    grid-template-columns:repeat(7, 1fr);
+    grid-template-rows:auto;
+    border:thin solid black;
+
+    --normal:rgb(255,255,255);
+    --normalh:rgb(230,230,230);
+
+    --busy:rgb(128, 0, 128);
+    --busyh:rgb(100, 0, 100);
+
+    --today:rgb(255, 165, 0);
+    --todayh:rgb(230, 140, 0);
+
+    --bt:repeating-linear-gradient(to bottom, var(--busy), var(--today) 25%, var(--busy) 50%);
+    --bth:repeating-linear-gradient(to bottom, var(--busyh), var(--todayh) 25%, var(--busyh) 50%);
+}
+
+div.mycalendar-month {
+    grid-column: 2 / 7;
+    margin:auto;
+}
+div.mycalendar-weekday {
+    margin:auto;
+}
+
+button.mycalendarb {
+    box-sizing: border-box;
+    background:var(--normal);
+    border:thin solid var(--normal);
+}
+button.mycalendarb.weekend,
+button.mycalendarb.weekend.busy {
+    color:red;
+}
+button.mycalendarb.extra {
+    opacity:0.3;
+}
+button.mycalendarb:hover,
+button.mycalendarb.selected {
+    background:var(--normalh);
+}
+button.mycalendarb:active,
+button.mycalendarb.selected {
+    border-style: inset;
+}
+button.mycalendarb.busy {
+    background:var(--busy);
+    font-weight: bold;
+    color:white;
+}
+button.mycalendarb.busy:hover,
+button.mycalendarb.busy.selected {
+    background:var(--busyh);
+}
+button.mycalendarb.today {
+    background:var(--today);
+}
+button.mycalendarb.today:hover,
+button.mycalendarb.today.selected {
+    background:var(--todayh);
+}
+button.mycalendarb.busy.today {
+    background:var(--bt);
+}
+button.mycalendarb.busy.today:hover,
+button.mycalendarb.busy.today.selected {
+    background:var(--bth);
+}

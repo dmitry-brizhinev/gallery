@@ -1,0 +1,16 @@
+textarea.page {
+  width: 100%;
+  resize: vertical;
+  height: 5cm;
+  box-sizing: border-box;
+}
+
+div.page {
+  margin-top: var(--margin);
+}
+
+button.page-create {
+  font-size: x-large;
+  width: 100px;
+  margin: var(--margin);
+}
